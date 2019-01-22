@@ -20,7 +20,7 @@ Click on the headlines to see analysis and code.
 - Cleaned the data
 - Established baseline performance of Logistic Regression model, Random Forest and Boosting
 - Tuned all models to find optimal hyperparameters
-- Used H2O.ai's machine learning platform for faster computing
+- Used [H2O.ai](https://www.h2o.ai/)'s machine learning platform for faster computing
 - Evaluated model performance
 - Determined the most important variables that influence high rating
 
