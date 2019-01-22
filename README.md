@@ -8,7 +8,6 @@ Data: 550k+ Observations about Black Friday shoppers
 - Derived valuable insights about customers and products
 - Predicted customer spending using Linear Model and Random Forest
 - Built a [Recommendation System](https://en.wikipedia.org/wiki/Recommender_system) that recommends new products to customers, which they are likely to purchase
-
 <img src="img/black-friday-tag.png" width="200" height="123">
 
 ## [Predicting High Google Play App Ratings](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
@@ -18,5 +17,4 @@ Data: Details of 10k+ apps scraped from Google Play Store
 - Implemented [H2O.ai](https://www.h2o.ai/)'s machine learning platform for faster computing
 - Evaluated model performance
 - Determined the most important variables that influence high app rating
-
-<img src="img/google-play.png" width="200" height="98">
+<img src="img/google-play.png" width="250" height="123">
