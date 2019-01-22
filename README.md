@@ -4,7 +4,7 @@ This repository is a compilation of some of the projects I worked on. The aim of
 
 ## [Black Friday: EDA, Spending Prediction and Recommendation System](https://hendrik-mischo.github.io/Projects/Black_Friday/Black_Friday.html)
 *Collaboration with classmate [Kelly Raas](https://github.com/kellyraas)*\
-Data: 550k+ Observations about Black Friday shoppers
+Data: 550k+ observations about Black Friday shoppers
 - Derived valuable insights about customers and products
 - Predicted customer spending using Linear Model and Random Forest
 - Built a [Recommendation System](https://en.wikipedia.org/wiki/Recommender_system) that recommends new products to customers, which they are likely to purchase
