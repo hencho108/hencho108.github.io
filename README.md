@@ -3,7 +3,7 @@
 
 [Black Friday](https://hendrik-mischo.github.io/Projects/Black_Friday/Black_Friday.html)
 
-[Google Apps](https://hendrik-mischo.github.io/blob/master/Projects/Google_Apps/Google_Apps.html)
+[Google Apps](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
 
 ## Getting Started
 
