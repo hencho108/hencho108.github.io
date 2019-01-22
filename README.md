@@ -4,13 +4,13 @@ This repository is a compilation of some of the projects I worked on. The aim of
 
 ## [Black Friday: EDA, Spending Prediction and Recommendation System](https://hendrik-mischo.github.io/Projects/Black_Friday/Black_Friday.html)
 *Collaboration with classmate [Kelly Raas](https://github.com/kellyraas)*
-- Dataset of Black Friday shoppers
+Dataset of Black Friday shoppers
 - Derived valuable insights about customers and products
 - Predicted customer spending comparing Linear Model and Random Forest
 - Built a Recommendation System that recommends new products to customers, which they are likely to purchase
 
 ## [Predicting High Google Play App Ratings](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
-- Dataset of app ratings and information on Google Play Store 
+Dataset of app ratings and information on Google Play Store 
 - Cleaned the data
 - Established baseline performance of Logistic Regression model, Random Forest and Boosting
 - Tuned all models to find optimal hyperparameters
