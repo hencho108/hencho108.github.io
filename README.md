@@ -9,7 +9,7 @@ Data: 550k+ Observations about Black Friday shoppers
 - Predicted customer spending using Linear Model and Random Forest
 - Built a [Recommendation System](https://en.wikipedia.org/wiki/Recommender_system) that recommends new products to customers, which they are likely to purchase
 
-<img src="img/black-friday-tag.png" width="600" height="400">
+<img src="img/black-friday-tag.png" width="200" height="123">
 
 ## [Predicting High Google Play App Ratings](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
 Data: Details of 10k+ apps scraped from Google Play Store 
