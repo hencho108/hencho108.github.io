@@ -11,7 +11,7 @@ Data: 550k+ Observations about Black Friday shoppers
 
 ![Alt text](Projects/Black_Friday/files/unnamed-chunk-20-1.png?raw=true "Snapshot")
 
-![test image size](Projects/Black_Friday/files/unnamed-chunk-20-1.png){:height="50%" width="50%"}
+![test image size](Projects/Black_Friday/files/unnamed-chunk-20-1.png){:height="50px" width="50px"}
 
 ## [Predicting High Google Play App Ratings](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
 Data: Details of 10k+ apps scraped from Google Play Store 
