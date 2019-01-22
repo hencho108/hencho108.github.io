@@ -9,11 +9,7 @@ Data: 550k+ Observations about Black Friday shoppers
 - Predicted customer spending using Linear Model and Random Forest
 - Built a [Recommendation System](https://en.wikipedia.org/wiki/Recommender_system) that recommends new products to customers, which they are likely to purchase
 
-![Alt text](Projects/Black_Friday/files/unnamed-chunk-20-1.png?raw=true "Snapshot")
-
-![test image size](Projects/Black_Friday/files/unnamed-chunk-20-1.png){:height="10px" width="10px"}
-
-<img src="Projects/Black_Friday/files/unnamed-chunk-20-1.png" width="20" height="20">
+<img src="Projects/Black_Friday/files/unnamed-chunk-20-1.png" width="200" height="200">
 
 ## [Predicting High Google Play App Ratings](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
 Data: Details of 10k+ apps scraped from Google Play Store 
