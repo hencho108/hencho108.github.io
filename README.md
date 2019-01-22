@@ -9,6 +9,8 @@ Data: 550k+ Observations about Black Friday shoppers
 - Predicted customer spending using Linear Model and Random Forest
 - Built a [Recommendation System](https://en.wikipedia.org/wiki/Recommender_system) that recommends new products to customers, which they are likely to purchase
 
+![Alt text](Projects/Black_Friday/files/unnamed-chunk-20-1.png?raw=true "Snapshot")
+
 ## [Predicting High Google Play App Ratings](https://hendrik-mischo.github.io/Projects/Google_Apps/Google_Apps.html)
 Data: Details of 10k+ apps scraped from Google Play Store 
 - Established baseline performance of Logistic Regression model, Random Forest and Boosting
