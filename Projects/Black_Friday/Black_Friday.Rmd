@@ -1,20 +1,20 @@
 ---
-title: "Black Friday: EDA, Spending Prediction and Recommendation System"
-author: "[Kelly Raas](https://github.com/kellyraas), [Hendrik Mischo](https://github.com/hendrik-mischo)"
+title: "Black Friday: EDA, Spending Prediction and Product Recommender"
+author: "[Hendrik Mischo](https://github.com/hendrik-mischo), [Kelly Raas](https://github.com/kellyraas)"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
+  github_document: default
   html_document:
     code_folding: hide
     toc: true
     toc_float: true
     number_sections: true
 knit: (function(inputFile, encoding) {
-  rmarkdown::render(inputFile, encoding = encoding,
-  output_dir = "output", output_format = "all") })
+  rmarkdown::render(inputFile, encoding = encoding, output_format = "all") })
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(fig.width = 6, fig.height = 4, fig.align = "center", echo = TRUE, warning = FALSE, message = FALSE, autodep = TRUE, cache = TRUE, options(scipen = 999), comment = "")
+knitr::opts_chunk$set(fig.width = 6, fig.height = 4, fig.align = "center", echo = TRUE, warning = FALSE, message = FALSE, autodep = TRUE, cache = TRUE, options(scipen = 999), comment = "", fig.path = "files/")
 ```
 
 # Introduction
@@ -46,7 +46,7 @@ library(randomForest)   # For Random Forests
 library(ggthemes)       # For themes
 
 # Import the data
-data = read.csv("blackfriday.csv")
+data = read.csv("data/blackfriday.csv")
 attach(data)
 
 # Define the theme to be applied to the plots
@@ -66,7 +66,7 @@ theme.hc = function(){
     legend.title        = element_blank())}
 ```
 
-Now let's have a look at the data.
+Now let's glimpse the data.
 
 ```{r}
 head(data)
@@ -622,8 +622,9 @@ sapply(eval.sets@runsTrain, length)
 Now let's not only use IBCF, but also UBCF to see how the two compare. To check if our recommendations have any value at all we include a model that generates random recommendations as well. Then we will plot the precision and recall scores for different numbers of product recommendations.
 
 In the context of this data, precision and recall mean the following:
-- Precision: Of the all recommended products, how many are actually relevant to the customer?
-- Recall: Of all the products that are relevant to the customer, what is the fraction that the algorithm recommended?
+
+- **Precision:** Of the all recommended products, how many are actually relevant to the customer?
+- **Recall:** Of all the products that are relevant to the customer, what is the fraction that the algorithm recommended?
 
 ```{r, results = "hide"}
 # Define the models that we are going to compare
