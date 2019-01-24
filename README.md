@@ -11,3 +11,5 @@ Data: Details of 10k+ apps scraped from Google Play Store
 - Determined the most important variables that influence high app rating
 
 <img src="img/google-play.png" width="250" height="123">
+
+test
