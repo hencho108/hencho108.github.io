@@ -11,12 +11,13 @@ Data: Details of 10k+ apps scraped from Google Play Store
 - Determined the most important variables that influence high app rating
 
 <img src="img/google-play.png" width="250" height="123">
+
 |              | Linear Model | Random Forest | Boosting |
 |--------------|--------------|---------------|----------|
 | AUC          | 0.667        | 0.753         | 0.763    |
 | Class. Error | 0.371        | 0.301         | 0.294    |
 
-<img src="Projects/Google_Apps/files/unnamed-chunk-35-1.png" width="250" height="123">
+<img src="Projects/Google_Apps/files/unnamed-chunk-35-1.png" width="350" height="200">
 
 
 ## [Monty Hall Problem Simulation](https://hendrik-mischo.github.io/Projects/Monty_Hall_Simulation/Monty_Hall_Simulation.html)
