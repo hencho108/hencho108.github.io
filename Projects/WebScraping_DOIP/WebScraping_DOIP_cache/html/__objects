@@ -1,0 +1,8 @@
+unnamed-chunk-1	url_doip
+unnamed-chunk-2	get_all_offer_urls	get_last_page	get_offer_urls
+unnamed-chunk-3	list_of_offers
+unnamed-chunk-4	html_text_na
+unnamed-chunk-5	get_activity	get_hours	get_location	get_offer_period	get_offer_ref	get_offer_title	get_offer_type	get_requirements	get_salary	get_tasks
+unnamed-chunk-6	get_all_info
+unnamed-chunk-7	all_info	data
+unnamed-chunk-8	offers_madm
