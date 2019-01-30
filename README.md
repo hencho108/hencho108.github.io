@@ -3,7 +3,7 @@
 This repository is a compilation of some of the projects I worked on. The aim of the projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. The projects are written either in R or Python. Click headlines to see analysis and code.
 
 ## [Black Friday: EDA, Spending Prediction and Recommendation System](https://hendrik-mischo.github.io/Projects/Black_Friday/Black_Friday.html)
-*Collaboration with classmate [Kelly Raas](https://github.com/kellyraas)*\
+*Collaboration with classmate [Kelly Raas](https://github.com/kellyraas)* <br/>
 Data: 550k+ Observations about Black Friday shoppers
 - Derived valuable insights about customers and products
 - Predicted customer spending using Linear Model and Random Forest
