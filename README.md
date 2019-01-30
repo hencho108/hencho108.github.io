@@ -21,13 +21,10 @@ Data: Details of 10k+ apps scraped from Google Play Store
 
 <img src="img/google-play.png" width="250" height="123">
 
-|              | Linear Model | Random Forest | Boosting |
-|--------------|--------------|---------------|----------|
-| AUC          | 0.667        | 0.753         | 0.763    |
-| Class. Error | 0.371        | 0.301         | 0.294    |
-
 ## [Web-Scraping My University's Job Board](https://hendrik-mischo.github.io/Projects/WebScraping_DOIP/WebScraping_DOIP.html)
 My university has a job board where new internship and job opportunities are posted regularily. To better analyze the job postings I created a web-scraping tool that can export all postings as CSV.
+
+<img src="img/doip.png" width="250" height="122">
 
 ## [Monty Hall Problem Simulation](https://hendrik-mischo.github.io/Projects/Monty_Hall_Simulation/Monty_Hall_Simulation.html)
 Recently, I watched the movie "21". In one of the scenes they talk about a famous statistical problem, the [Monty Hall problem](https://en.wikipedia.org/wiki/Monty_Hall_problem). I couldn't believe that it is true, so I ran a simulation to find out myself.
