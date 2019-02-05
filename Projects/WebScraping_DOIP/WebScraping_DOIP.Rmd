@@ -221,7 +221,7 @@ data[] = lapply(data, as.character)
 write.table(data, file = "doip_scraped.csv", na = "", fileEncoding = "UTF-8", sep = ";")
 
 # Check head of data
-head(data)
+#head(data)
 ```
 
 Now let's just select the ones that are relevant to my study programme.
@@ -233,7 +233,7 @@ offers_madm = data %>%
 
 write.table(offers_madm, file = "offers_madm.csv", na = "", fileEncoding = "UTF-8", sep = ";")
 
-offers_madm
+offers_madm[c("title", "reference", "type", "salary", "link")]
 ```
 
 
