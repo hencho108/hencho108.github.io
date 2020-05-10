@@ -24,7 +24,7 @@ Data: Details of 10k+ apps scraped from Google Play Store
 ## [Outlier Detection](https://hendrik-mischo.github.io/Projects/Outlier_Detection/Outlier_Detection.html)
 The objective of this project was to detect anomalies, i.e. patterns that do not conform to “normal” behavior, in a dataset of breast cancer biopsies. Three common outlier detection methods were compared: Mahalanobis Distance, DBSCAN and Expectation Maximization. The analysis highlighted the strengths and weaknesses of each algorithm and provided insights about situations when one model would be preferable to another.
 
-<img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="300" height="300">
+<img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="300" height="350">
 
 ## [Web-Scraping My University's Job Board](https://hendrik-mischo.github.io/Projects/WebScraping_DOIP/WebScraping_DOIP.html)
 My university has a job board where new internship and job opportunities are posted regularily. To better analyze the job postings I created a web-scraping tool that can export all postings as CSV.
