@@ -27,7 +27,7 @@ The objective of this project was to detect anomalies, i.e. patterns that do not
 <img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="345" height="265">
 
 ## [Finding the Optimal Stock Portfolio (Spanish)](https://hendrik-mischo.github.io/Projects/Optimal_Stock_Portfolio/Optimal_Stock_Portfolio.html)
-The objective of this project was to determine an optimal stock portfolio that maximizes the expected return given that I had 10,000 EUR to invest. I worked with real stock market data and found the optimal stock and quantities by solving a fuzzy mathematical programming problem.
+The objective of this project was to determine an optimal stock portfolio that maximizes the expected return given that I had 10,000 EUR to invest. I worked with real stock market data and found the optimal stocks and quantities by solving a fuzzy mathematical programming problem.
 
 <img src="img/optimal-stock-portfolio.png" width="250" height="239">
 
