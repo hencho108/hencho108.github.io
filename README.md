@@ -26,6 +26,11 @@ The objective of this project was to detect anomalies, i.e. patterns that do not
 
 <img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="350" height="300">
 
+## [Finding the Optimal Stock Portfolio (Spanish)](https://hendrik-mischo.github.io/Projects/Optimal_Stock_Portfolio/Optimal_Stock_Portfolio.html)
+The objective of this project was to determine an optimal stock portfolio that maximizes the expected return given that I had 10,000 EUR to invest. I worked with real stock market data and found the optimal stock and quantities by solving a fuzzy mathematical programming problem.
+
+<img src="img/optimal-stock-portfolio.png" width="300" height="400">
+
 ## [Web-Scraping My University's Job Board](https://hendrik-mischo.github.io/Projects/WebScraping_DOIP/WebScraping_DOIP.html)
 My university has a job board where new internship and job opportunities are posted regularily. To better analyze the job postings I created a web-scraping tool that can export all postings as CSV.
 

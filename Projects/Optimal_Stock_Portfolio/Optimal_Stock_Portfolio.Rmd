@@ -1,0 +1,548 @@
+---
+title: "Finding the Optimal Stock Portfolio"
+subtitle: "A Fuzzy Mathematical Programming Approach"
+author: "Hendrik Mischo"
+#output: html_document
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    toc: true
+    #number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.width = 8, fig.height = 6, fig.align = "center", echo = TRUE, warning = FALSE, message = FALSE, autodep = TRUE, cache = TRUE, options(scipen = 999), comment = "", fig.path = "files/")
+```
+
+# Objectivo
+
+El objetivo de este proyecto es determinar una cartera de acciones óptimo que maximice el rendimiento esperado si tuviera 10,000 EUR para invertir ahora.
+
+Para lograr este objectivo, trabajaremos con datos reales del mercado de valores y resolveremos un problema de programación lineal. Vamos a comparar las metodologías de la programación lineal crisp y fuzzy.
+
+
+# Adquisición de datos
+
+Vamos a importar las librerias relevantes y definir una función que nos permite visualizar tablas grandes. 
+
+```{r}
+library(lpSolve)
+library(quantmod)
+library(tidyverse)
+library(kableExtra)
+
+# Custom kable data frame function
+kdf = function(df, nrow=NULL){
+  if (missing(nrow)) {nrow = nrow(df)}
+  kable(df[1:nrow,], "html") %>% 
+  kable_styling("striped") %>%
+  scroll_box(width = "100%")
+}
+```
+
+Obtengamos el precio de las acciones de los últimos tres años para las siguientes empresas:
+
+**Apple, Facebook, Google, Tesla, Daimler, BMW, Volkswagen, Porsche, Expedia, Tui y Swatch**
+
+La razón por la que elegí estas empresas es que no se debería invertir en compañías o industrias que no se entiende, como dicen. Me siento más cómodo invirtiendo en estas compañías que en otras porque o soy cliente, he trabajado en la industria o me parece personalmente interesante.
+
+También obtenemos el valor del S&P 500, que es nuestro mercado. Esto será luego importante como valor de referencia para comparar las acciones.
+
+```{r}
+start = "2016-06-01"
+stop = "2019-06-01"
+symbols = c("AAPL","FB","GOOG","AMZN","TSLA","DAI.DE","BMW.DE","VOW3.DE","PAH3.DE","EXPE","TUI1.DE","UHR.SW","SPY")
+
+get_stock_data = function(symbol){
+  getSymbols(symbol, 
+              from = start, 
+              to = stop, 
+              auto.assign=FALSE,
+              warning = FALSE) %>%
+  Ad()
+}
+
+data = do.call(cbind, lapply(symbols, get_stock_data))
+data = na.omit(data)
+names(data) = c("apple","facebook","google","amazon","tesla","daimler","bmw","vw","porsche","expedia","tui","swatch","market")
+
+# Convert all currencies to EUR
+usd2eur = 0.88
+chf2eur = 0.89
+data$apple = data$apple * usd2eur
+data$facebook = data$facebook * usd2eur
+data$google = data$google * usd2eur
+data$amazon = data$amazon * usd2eur
+data$tesla = data$tesla * usd2eur
+data$expedia = data$expedia * usd2eur
+data$market = data$market * usd2eur
+data$swatch = data$swatch * chf2eur
+data = data %>% round(.,2)
+kdf(data.frame(data),10)
+```
+
+
+# Rendimientos esperados de cada acción
+
+El *Capital Asset Pricing Model* (CAPM) es un modelo que describe la relación entre el rendimiento esperado y el riesgo de invertir en una seguridad. El modelo muestra que el rendimiento esperado de un activo es igual al rendimiento sin riesgo más una prima de riesgo, que se basa en la beta de ese valor. La fórmula CAPM se utiliza para calcular los rendimientos esperados de un activo.
+
+$$ \begin{gathered}
+E(r_i) = r_f + \beta_i [E(r_m)-r_f] \nonumber \\ \nonumber \\
+\textrm{where}\ \nonumber \\
+E(r_i) = \textrm{Expected return of stock i}\ \nonumber \\
+r_f = \textrm{Risk free return rate}\ \nonumber \\
+\beta_i = \textrm{Beta of i}\ \nonumber \\
+r_m = \textrm{Expected market return}\ \nonumber \\
+\end{gathered} $$
+
+
+## Calculación del factor de riesgo (beta)
+
+Ahora que tenemos los datos, podemos calcular el factor de riesgo para cada acción que vamos a necesitar para la fórmula CAPM. El factor de riesgo, beta, compara la volatilidad de una acción con el mercado. Si $\beta = 1$, significa que la accion es exactamente tan volátile como el mercado. Cuanto más alto es la beta, más volátil se compara una acción con el mercado en general y, por lo tanto, asumimos más riesgo. Podemos calcular la beta de la siguiente manera.
+
+$$\beta_i = cov(r_i, r_m)/\sigma_m $$
+donde 
+$$
+r_i = \textrm{Rendimiento de la accion} \nonumber \\
+r_m = \textrm{Rendimiento del mercado}
+$$
+
+Vamos a calcular la beta según los rendimientos mensuales, así que vamos a calcularlos ahora.
+
+```{r}
+monthly_returns = lapply(data, monthlyReturn)
+monthly_returns_df = as.data.frame(monthly_returns)
+names(monthly_returns_df) = names(data)
+kdf(monthly_returns_df, 10)
+```
+
+Ahora calculemos $\beta$ para cada acción.
+
+```{r}
+# Calculate betas
+get_beta = function(asset){
+  (cov(asset, monthly_returns$market) / var(monthly_returns$market))[1,1] %>%
+  round(2)
+}
+betas = lapply(monthly_returns, get_beta)
+betas
+```
+
+
+## Caluclación de los rendimientos esperados
+
+Usando las betas obtenidas previamente, ahora podemos calcular los rendimientos anuales esperados.
+
+La notación $r_f$ es el rendimiento para un activo sin riesgo, que generalmente es igual al rendimiento de un bono del gobierno de EE.UU. a 10 años. Suele ser alrededor de 2%. Aquí vamos a asumir que $r_f = 0.02$
+
+```{r}
+# Get expected yearly market return
+exp_market_return = yearlyReturn(data$market) %>% mean()
+
+# Apply CAPM formula
+exp_return = function(beta, rf = 0.02){
+  # CAPM formula
+  round(rf + ( beta * (exp_market_return - rf) ), 4)
+}
+
+# Apply CAPM to each stock
+exp_returns = lapply(betas, exp_return) 
+
+# Print results
+data.frame(beta = unlist(betas),
+           exp_return = unlist(exp_returns)) %>% kdf()
+```
+
+
+# Correlaciones entre acciones
+
+Antes de llegar al problema de la programación lineal, deberíamos comprobar si existen correlaciónes entre las acciones. Queremos evitar tener acciones altamente correlacionadas en el portafolio para diversificarnos y protegernos.
+
+```{r}
+library(corrplot)
+corrplot(cor(data[,-13]), type="upper", method = "number", tl.col = "black", tl.srt = 45, tl.cex = 0.7)
+```
+
+Parece que varias acciones están altamente correlacionadas. Necesitamos asegurarnos de que no podemos tenerlos en el portfolio juntos. Haremos esto formulando un problema de programación lineal binario. Como soy una persona bastante aversa al riesgo, el objetivo de este problema será minimizar la suma de las betas de cada acción.
+
+Este paso se puede ver como una forma de preprocesamiento. Reduciré la cantidad de acciones disponibles al resolver un problema de programación lineal que minimiza el riesgo. Como restricciones tendremos una combinación de acciones que no queremos, es decir, aquellas que están altamente correlacionadas. 
+
+Más adelante usaremos las acciones restantes para resolver otro problema y descubrir cuánto tenemos que invertir en cada acción para maximizar el rendimiento esperado.
+
+
+# Reducción de candidatos
+
+El problema de selección de candidatos que describimos en la sección anterior se formula de la siguiente manera.
+
+$$
+\begin{equation}
+\begin{aligned}
+& \textrm{min} && 1.05AP+1.21FB+1.06GO+1.69AM+0.06TE+1.03DA  \\
+&&& +0.74BM+0.92VW+1.05PO+0.79EX+0.99TU+0.53SW  \\
+& \textrm{s.a.} && AP+FB+GO+...+SW \leq 5 \\
+&&& AP+FB \leq 1\\
+&&& AP+GO \leq 1\\
+&&& AP+AM \leq 1\\
+&&& AP+VW \leq 1\\
+&&& FB+GO \leq 1\\
+&&& FB+AM \leq 1\\
+&&& FB+TE \leq 1\\
+&&& FB+VW \leq 1\\
+&&& FB+PO \leq 1\\
+&&& FB+TU \leq 1\\
+&&& FB+SW \leq 1\\
+&&& GO+AM \leq 1\\
+&&& GO+VW \leq 1\\
+&&& GO+PO \leq 1\\
+&&& BM+VW \leq 1\\
+&&& BM+PO \leq 1\\
+&&& BM+TU \leq 1\\
+&&& BM+SW \leq 1\\
+&&& VW+PO \leq 1\\
+&&& VW+TU \leq 1\\
+&&& TU+SW \leq 1\\
+&&& DA = 1\\
+&&& AP+FB+GO+...+SW \geq 0 \quad \\
+\end{aligned}
+\end{equation}
+$$
+
+AP, FB, GO, etc. son abreviaturas para el stock respectivo. Dado que este es un problema binario, cada acción solo puede ser 1 o 0.
+
+Pongamos las restricciones en una tabla.
+
+```{r}
+coefs = unname(unlist(betas))[-13]
+
+constr = data.frame(
+  AP = c(rep(1,5),rep(0,18)),
+  FB = c(1,1,0,0,0,1,1,1,1,1,1,1,rep(0,11)),
+  GG = c(1,0,1,0,0,1,1,1,1,1,1,1,rep(0,11)),
+  AZ = c(1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0),
+  TE = c(1,rep(0,6),1,rep(0,15)),
+  DA = c(1,rep(0,21),1),
+  BM = c(1,rep(0,14),1,1,1,1,0,0,0,0),
+  VW = c(1,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1,rep(0,7)),
+  PO = c(1,rep(0,8),1,0,0,0,0,1,0,1,0,0,1,0,0,0),
+  EX = c(1,rep(0,22)),
+  TU = c(1,rep(0,9),1,0,0,0,0,0,0,1,0,0,1,0,0),
+  SW = c(1,rep(0,10),1,rep(0,6),1,0,0,1,0),
+  dir = c(">=",rep("<=",21),"="),
+  b = c(5,rep(1,22)),
+  stringsAsFactors = FALSE
+)
+
+kdf(constr)
+```
+
+Ahora vamos a resolver el problema.
+
+```{r}
+lps_solution = lp("min", 
+                  unname(unlist(betas))[-13], # coeficients = betas
+                  constr[,1:12],              # constraint matrix
+                  paste0(constr$dir),         # directions
+                  constr$b,                   # constraint results
+                  all.bin = TRUE              # allow binary only
+                  )
+
+candidates = as.data.frame(cbind(names(data)[-13], lps_solution$solution),
+                           stringsAsFactors = FALSE) 
+names(candidates) = c("stock","decision")
+kdf(candidates); cat("Sum of betas ", lps_solution$objval)
+```
+
+Como podemos ver, Tesla, Daimler, Volkswagen, Expedia y Swatch quedan aún. Estos serán nuestros candidatos en los que podemos invertir.
+
+
+# Problema de optimizacion (crisp)
+
+## Función objectivo general
+
+Nuestro objetivo era maximizar el rendimiento global. El rendimiento consiste en el rendimiento que obtenemos debido a un aumento en el valor y el rendimiento que obtenemos en forma de dividendos.
+
+Para obtener el rendimiento de la ganancia de valor, podemos multiplicar el precio de las acciones con el rendimiento esperado, que calculamos anteriormente. Luego multiplicamos eso por el número de acciones que tenemos para esa compañía.
+
+$$
+\begin{equation}
+\begin{aligned}
+& \textrm{Max. Overall Return} \\
+& = \textrm{Return from Value Gained + Return from Dividend Payments} \\
+& = 0.0242*162.94*TE + 0.0919*46.44*DA + 0.0843*139.50*VW \\
+& + 0.0752*101.20*EX + 0.0570*224.01*SW \\
+& + \textrm{Return from Dividend Payments} \\
+\end{aligned} 
+\end{equation}
+$$
+
+
+## Dividendos
+
+No todas las empresas pagan dividendos. Obtengamos el dividendo promedio pagado por cada compañía en los últimos tres años.
+
+```{r}
+mean_dividend = function(symbol){
+  divids = getDividends(symbol,
+                        from = start, 
+                        to = stop)
+  mean_divid = mean(divids) %>% round(2)
+  mean_divid = ifelse(is.nan(mean_divid),0,mean_divid)
+  return(mean_divid)
+}
+exp_dividends = do.call(rbind, lapply(symbols, mean_dividend))
+exp_dividends
+```
+
+Obtengamos los dividendos solo para las cinco acciones seleccionadas.
+
+```{r}
+dividends = as.data.frame(cbind(stock = candidates$stock[candidates$decision == 1],
+                                exp_div = exp_dividends[candidates$decision == 1]),
+                          stringsAsFactors = FALSE) %>% 
+                          mutate(exp_div = as.numeric(exp_div))
+dividends
+```
+
+Con la información sobre dividendos podemos completar la función objetivo.
+
+$$ 
+\begin{equation}
+\begin{aligned}
+& \textrm{Max. Overall Return} \\
+& = \textrm{Return from Value Gained + Return from Dividend Payments} \\
+& = 3.94*TE + (4.27+3.38)*DA + (11.76+2.76)*VW + (7.61+0.3)*EX + (12.77+7.42)*SW \\
+& = 3.94*TE + 7.65*DA + 14.52*VW + 7.91*EX + 20.19*SW \\
+\end{aligned} 
+\end{equation}
+$$
+
+
+## Restricciones 
+
+Para el problema de optimización queremos que se consideren las siguientes restricciones.
+
+**El portfolio tiene que contener al menos 22 aciones de Daimler ya que las tengo ya.**
+
+$$\begin{equation}
+\begin{aligned}
+& DA \geq 22\\
+\end{aligned}
+\end{equation}$$
+
+**Ninguna inversión individual debe representar más del 40% del budget**
+
+$$\begin{equation}
+\begin{aligned}
+& 162.94TE \leq 4,000 \\
+& 46.44DA \leq 4,000 \\
+& 139.50VW \leq 4,000 \\
+& 101.20EX \leq 4,000 \\
+& 224.01SW \leq 4,000 \\
+\end{aligned}
+\end{equation}$$
+
+**No quiero invertir más de 50% en la industria automotriz.**
+
+$$
+\begin{equation}
+\begin{aligned}
+& 162.94TE + 46.44DA + 139.50*VW \leq 0.5*10,000 &&&\\
+& \Leftrightarrow 162.94TE + 46.44DA + 139.50*VW \leq 5,000 &&&
+\end{aligned}
+\end{equation}
+$$
+
+**El riesgo promedio debe ser menor o igual de 1.**
+
+$$
+\begin{equation}
+\begin{aligned}
+& \dfrac{0.06*162.94TE+1.03*46.44DA+0.92*139.50VW+0.79*101.20EX+0.53*224.01SW}{162.94TE+46.44DA+139.50VW+101.20EX+224.01SW} \leq 1\\
+& \Leftrightarrow {9.78TE+47.83DA+128.34VW+79.95EX+118.73SW} \leq {162.94TE+46.44DA+139.50VW+101.20EX+224.01SW}\\
+& \Leftrightarrow {9.78TE+47.83DA+128.34VW+79.95EX+118.73SW} \leq 10,000\\
+\end{aligned}
+\end{equation}
+$$
+
+## Resolviendo el problema de optimización
+
+Resumimos las restricciones y la función objetivo en el siguiente problema de optimización.
+
+$$
+\begin{equation}
+\begin{aligned}
+& \textrm{max} && 3.94TE + 7.65DA + 14.52VW + 7.91EX + 20.19SW  \\
+& \textrm{s.a.} && 162.94TE+46.44DA+139.50VW+101.20EX+224.01SW = 10,000 \\
+&&& DA \geq 22\\
+&&& 162.94TE \leq 4,000 \\
+&&& 46.44DA \leq 4,000 \\
+&&& 139.50VW \leq 4,000 \\
+&&& 101.20EX \leq 4,000 \\
+&&& 224.01SW \leq 4,000 \\
+&&& 162.94TE + 46.44DA + 139.50*VW \leq 5,000 \\
+&&& {9.78*TE+47.83*DA+128.34*VW+79.95*EX+118.73*SW} \leq 10,000\\
+&&& TE,DA,VW,EX,SW \geq 0 \quad \\
+\end{aligned}
+\end{equation}
+$$
+
+Vamos a crear la tabla de restricciones.
+
+```{r}
+coefs = c(3.94,7.65,14.52,7.91,20.19)
+
+constr = data.frame(
+  TE = c(162.94,0,162.94,0,0,0,0,162.94,9.78),
+  DA = c(46.44,1,0,46.44,0,0,0,46.44,47.83),
+  VW = c(139.5,0,0,0,139.5,0,0,139.5,128.34),
+  EX = c(101.2,0,0,0,0,101.2,0,0,79.95),
+  SW = c(224.01,0,0,0,0,0,224.01,0,118.73),
+  dir = c("<=",">=",rep("<=",7)),
+  b = c(10000,22,4000,4000,4000,4000,4000,5000,10000),
+  stringsAsFactors = FALSE
+)
+kdf(constr)
+```
+
+Ahora vamos a resolver el problema.
+
+```{r}
+lps_solution = lp("max", 
+                  coefs,                      # coeficients
+                  constr[,1:5],               # constraint matrix
+                  paste0(constr$dir),         # directions
+                  constr$b,
+                  all.int = TRUE # constraint results
+                  )
+
+solution_crisp = data.frame(stock = c("Tesla","Daimler","Volkswagen","Expedia","Swatch"), 
+                            quantity = lps_solution$solution,
+                            stringsAsFactors = FALSE)
+kdf(solution_crisp); cat("Return: ", lps_solution$objval)
+```
+
+Esperaríamos un retorno de `r lps_solution$objval` EUR si compro las acciones antes mencionadas.
+
+
+# Problema de optimizacion (fuzzy)
+
+## Transformando el problema crisp a fuzzy
+
+Los resultados anteriores eran bastante buenas, pero en realidad las restricciones no necesariamente tienen que ser tan estrictas. Por lo tanto, los "aflojaremos" o los "fuzzificaremos" de la siguiente manera:
+
+- El rendimiento esperado debería ser superior a 1,300, pero tampoco me importaría tener un poco menos.
+- Mi presupuesto no necesariamente tiene que ser exactamente 10,000 euros. Puede que tenga un poco más.
+- Ninguna acción debe representar más del 40% del portafolio, pero un poco más no necesariamente sería malo.
+- No quiero invertir más de 50% en la industria automotriz, pero un poco más tampoco sería malo.
+- El riesgo promedio debe ser menor o igual de 1, pero todavía estaría comodo con un poco más riesgo.
+
+Al incorporar esto en el problema de optimización, la versión difusa se ve así:
+
+$$
+\begin{equation}
+\begin{aligned}
+& 3.94TE + 7.65DA + 14.52VW + 7.91EX + 20.19SW  \succ 1,300 \\ \\
+& 162.94TE+46.44DA+139.50VW+101.20EX+224.01SW \prec 10,000 \\
+& DA \geq 22\\
+& 162.94TE \prec 4,000 \\
+& 46.44DA \prec 4,000 \\
+& 139.50VW \prec 4,000 \\
+& 101.20EX \prec 4,000 \\
+& 224.01SW \prec 4,000 \\
+& 162.94TE + 46.44DA + 139.50*VW \prec 5,000 \\
+& {9.78*TE+47.83*DA+128.34*VW+79.95*EX+118.73*SW} \prec 10,000\\
+& TE,DA,VW,EX,SW \geq 0 \quad \\
+\end{aligned}
+\end{equation}
+$$
+donde se admite que cada aspecto del problema pueda ser transgredido las cantidades
+$$
+\begin{aligned}
+& d_0 = 100 && d_1 = 1,000 && d_3 = 1,000 \\
+& d_4 = 1,000 &&d_5 = 1,000 && d_6 = 1,000 \\
+& d_7 = 1,000 && d_8 = 1,000 && d_9 = 3,000
+\end{aligned}
+$$
+Por lo tanto,
+$$
+\begin{aligned}
+& z = [1,200; 1,300] && M_1 = [10,000;11,000] && M_3 = [4,000; 5,000] \\
+& M_4 = [4,000; 5,000] && M_5 = [4,000; 5,000] && M_6 = [4,000; 5,000] \\
+& M_7 = [4,000; 5,000] && M_8 = [5,000; 6,000] && M_9 = [10,000; 13,000] 
+\end{aligned}
+$$
+
+## Resolviendo el problema de optimización
+
+Para que lpSolve pueda resolver el problema, necesitamos transformarlo de la siguiente manera.
+
+$$
+\begin{equation}
+\begin{aligned}
+& \textrm{max} && \alpha  \\
+& \textrm{s.a.} && 3.94TE + 7.65DA + 14.52VW + 7.91EX + 20.19SW + 100 \alpha \geq 1,200 \\
+&&& 162.94TE+46.44DA+139.50VW+101.20EX+224.01SW - 1,000 \alpha \leq 10,000 \\
+&&& DA \geq 22\\
+&&& 162.94TE - 1,000 \alpha \leq 4,000 \\
+&&& 46.44DA - 1,000 \alpha \leq 4,000 \\
+&&& 139.50VW - 1,000 \alpha \leq 4,000 \\
+&&& 101.20EX - 1,000 \alpha \leq 4,000 \\
+&&& 224.01SW - 1,000 \alpha \leq 4,000 \\
+&&& 162.94TE + 46.44DA + 139.50*VW - 1,000 \alpha \leq 5,000 \\
+&&& {9.78*TE+47.83*DA+128.34*VW+79.95*EX+118.73*SW} - 3,000 \alpha \leq 10,000\\
+&&& TE,DA,VW,EX,SW \geq 0 \quad \\
+&&& \alpha \leq 1
+\end{aligned}
+\end{equation}
+$$
+Vamos a crear la tabla de restricciones...
+
+```{r}
+coefs = c(0,0,0,0,0,1)
+
+constr = data.frame(
+  TE = c(3.94,162.94,0,162.94,0,0,0,0,162.94,9.78,1,0),
+  DA = c(7.65,46.44,1,0,46.44,0,0,0,46.44,47.83,1,0),
+  VW = c(14.52,139.5,0,0,0,139.5,0,0,139.5,128.34,1,0),
+  EX = c(7.91,101.2,0,0,0,0,101.2,0,0,79.95,1,0),
+  SW = c(20.19,224.01,0,0,0,0,0,224.01,0,118.73,1,0),
+  alpha = c(100,-1000,0,-1000,-1000,-1000,-1000,-1000,-1000,-3000,0,1),
+  dir = c(">=","<=",">=",rep("<=",7),">=","<="),
+  b = c(1300,10000,22,4000,4000,4000,4000,4000,5000,10000,0,1),
+  stringsAsFactors = FALSE
+)
+
+kdf(constr)
+```
+
+... y ejecutar el algoritmo.
+
+```{r}
+lps_solution = lp("max", 
+                  coefs,                      
+                  constr[,1:6],             
+                  paste0(constr$dir),     
+                  constr$b,
+                  int.vec = 1:5
+                  )
+
+TE = lps_solution$solution[1]
+DA = lps_solution$solution[2]
+VW = lps_solution$solution[3]
+EX = lps_solution$solution[4]
+SW = lps_solution$solution[5]
+return_fuzzy = 3.94*TE + 7.65*DA + 14.52*VW + 7.91*EX + 20.19*SW
+
+solution_fuzzy = data.frame(stock = c("Tesla","Daimler","Volkswagen","Expedia","Swatch"),
+                            quantity = lps_solution$solution[-6],
+                            stringsAsFactors = FALSE)
+kdf(solution_fuzzy); cat("Return:\t", return_fuzzy, "\nalpha:\t", lps_solution$solution[6])
+```
+
+Como podemos ver, la versión difusa ha mejorado el resultado. El rendimiento esperado de esta cartera es ~ 70 EUR más alto.
+
+# Conclusión 
+
+Como hemos visto anteriormente, el problema de optimización produció en un mejor resultado esperado. Entonces, si tuviéramos que invertir 10,000 EUR en esta cartera con las cantidades calculadas, esperaríamos un rendimiento general (ganancias de valor + dividendos) de `r return_fuzzy` EUR después de un año.
+
