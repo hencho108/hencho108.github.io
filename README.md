@@ -24,12 +24,12 @@ Data: Details of 10k+ apps scraped from Google Play Store
 ## [Outlier Detection](https://hendrik-mischo.github.io/Projects/Outlier_Detection/Outlier_Detection.html)
 The objective of this project was to detect anomalies, i.e. patterns that do not conform to “normal” behavior, in a dataset of breast cancer biopsies. Three common outlier detection methods were compared: Mahalanobis Distance, DBSCAN and Expectation Maximization. The analysis highlighted the strengths and weaknesses of each algorithm and provided insights about situations when one model would be preferable to another.
 
-<img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="350" height="300">
+<img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="300" height="230">
 
 ## [Finding the Optimal Stock Portfolio (Spanish)](https://hendrik-mischo.github.io/Projects/Optimal_Stock_Portfolio/Optimal_Stock_Portfolio.html)
 The objective of this project was to determine an optimal stock portfolio that maximizes the expected return given that I had 10,000 EUR to invest. I worked with real stock market data and found the optimal stock and quantities by solving a fuzzy mathematical programming problem.
 
-<img src="img/optimal-stock-portfolio.png" width="300" height="400">
+<img src="img/optimal-stock-portfolio.png" width="300" height="287">
 
 ## [Web-Scraping My University's Job Board](https://hendrik-mischo.github.io/Projects/WebScraping_DOIP/WebScraping_DOIP.html)
 My university has a job board where new internship and job opportunities are posted regularily. To better analyze the job postings I created a web-scraping tool that can export all postings as CSV.
