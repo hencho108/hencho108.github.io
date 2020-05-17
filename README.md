@@ -1,6 +1,6 @@
 ### [hendrik-mischo.github.io](https://hendrik-mischo.github.io)
 # Data Science Portfolio by [Hendrik Mischo](https://github.com/hendrik-mischo)
-This repository is a compilation of some of the projects I worked on. The aim of the projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. The projects are written either in R or Python. Click headlines to see analysis and code.
+This repository is a compilation of some of the projects I worked on. Usually the objective of these projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. Click headlines to see the analysis and code.
 
 ## [Black Friday: EDA, Spending Prediction and Recommendation System](https://hendrik-mischo.github.io/Projects/Black_Friday/Black_Friday.html)
 *Collaboration with Kelly Raas* <br/>
