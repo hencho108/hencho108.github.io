@@ -8,7 +8,9 @@ In this side project my colleage Kelly Raas and I trained and deployed a machine
 
 View a live demo of the app [here](https://movie-review-ai.herokuapp.com/).
 
-<img src="img/movie-demo.gif" width="327" height="633" style="margin: auto auto">
+<p align="center">
+<img src="img/movie-demo.gif" width="327" height="633">
+</p>
 
 We built the application following these steps:
 - Collecting training data from a [dataset](https://ai.stanford.edu/~amaas/data/sentiment/) of 50,000 highly polar movie reviews
