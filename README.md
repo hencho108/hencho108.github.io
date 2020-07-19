@@ -2,7 +2,9 @@
 # Data Science Portfolio by [Hendrik Mischo](https://github.com/hendrik-mischo)
 This repository is a compilation of some of the projects I worked on. Usually the objective of these projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. Click headlines to see the analysis and code.
 
-## [Machine Learning Deployment: Movie Review Sentiment Classifier (Work in Progress)](https://github.com/hendrik-mischo/movie-review-sentiment)
+## [Machine Learning Deployment: Movie Review Sentiment Classifier](https://github.com/hendrik-mischo/movie-review-sentiment)
+
+**This project is work in progress**
 
 In this side project my colleage Kelly Raas and I trained and deployed a machine learning model into an interactive web app. The web app allows a user to review random movies. As the user is typing, the app classifies the sentiment of the review in either positive or negative along with a probability in real-time. If the proposed sentiment classification is not correct, the user can submit feedback so that the model can learn. You can think of this as an app that suggests an appropriate score for a review with a sentiment analysis model that learns with more reviews.
 
