@@ -1,4 +1,4 @@
-### [hendrik-mischo.github.io](https://hencho.github.io)
+### [hencho.github.io](https://hencho.github.io)
 # Data Science Portfolio by [Hendrik Mischo](https://github.com/hencho108)
 This repository is a compilation of some of the projects I worked on. Usually the objective of these projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. Click headlines to see the analysis and code.
 
@@ -28,7 +28,7 @@ This project is still work in progress. Next steps:
 
 
 
-## [Black Friday: EDA, Spending Prediction and Recommendation System](https://hencho108.github.io/Projects/Black_Friday/Black_Friday.html)
+## [Black Friday: EDA, Spending Prediction and Recommendation System](https://hencho.github.io/Projects/Black_Friday/Black_Friday.html)
 *Collaboration with Kelly Raas* <br/>
 Data: 550k+ Observations about Black Friday shoppers
 - Derived valuable insights about customers and products
@@ -37,7 +37,7 @@ Data: 550k+ Observations about Black Friday shoppers
 
 <img src="img/black-friday-tag.png" width="250" height="150">
 
-## [Predicting High Google Play App Ratings](https://hencho108.github.io/Projects/Google_Apps/Google_Apps.html)
+## [Predicting High Google Play App Ratings](https://hencho.github.io/Projects/Google_Apps/Google_Apps.html)
 Data: Details of 10k+ apps scraped from Google Play Store
 - Established baseline performance of Logistic Regression model, Random Forest and Boosting
 - Tuned all models to find optimal hyperparameters
@@ -52,17 +52,17 @@ The objective of this project was to detect anomalies, i.e. patterns that do not
 
 <img src="Projects/Outlier_Detection/files/unnamed-chunk-14-1.png" width="345" height="265">
 
-## [Finding the Optimal Stock Portfolio (Spanish)](https://hencho108.github.io/Projects/Optimal_Stock_Portfolio/Optimal_Stock_Portfolio.html)
+## [Finding the Optimal Stock Portfolio (Spanish)](https://hencho.github.io/Projects/Optimal_Stock_Portfolio/Optimal_Stock_Portfolio.html)
 The objective of this project was to determine an optimal stock portfolio that maximizes the expected return given that I had 10,000 EUR to invest. I worked with real stock market data and found the optimal stocks and quantities by solving a fuzzy mathematical programming problem.
 
 <img src="img/optimal-stock-portfolio.png" width="250" height="239">
 
-## [Web-Scraping My University's Job Board](https://hencho108.github.io/Projects/WebScraping_DOIP/WebScraping_DOIP.html)
+## [Web-Scraping My University's Job Board](https://hencho.github.io/Projects/WebScraping_DOIP/WebScraping_DOIP.html)
 My university has a job board where new internship and job opportunities are posted regularily. To better analyze the job postings I created a web-scraping tool that can export all postings as CSV.
 
 <img src="img/doip.png" width="250" height="122">
 
-## [Monty Hall Problem Simulation](https://hencho108.github.io/Projects/Monty_Hall_Simulation/Monty_Hall_Simulation.html)
+## [Monty Hall Problem Simulation](https://hencho.github.io/Projects/Monty_Hall_Simulation/Monty_Hall_Simulation.html)
 Recently, I watched the movie "21". In one of the scenes they talk about a famous statistical problem, the [Monty Hall problem](https://en.wikipedia.org/wiki/Monty_Hall_problem). I couldn't believe that it is true, so I ran a simulation to find out myself.
 
 <img src="img/monty-hall.png" width="250" height="138">
