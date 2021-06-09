@@ -1,8 +1,0 @@
-unnamed-chunk-1	library	tidyverse	rvest	stringr	url_doip
-unnamed-chunk-2	get_offer_urls	html	read_html	url	%>%	html_nodes	html_attr	get_last_page	pages_data	length	strsplit	unlist	nth	as.numeric	get_all_offer_urls	first_page	latest_page_number	list_of_pages	str_c	list_of_offers	map
-unnamed-chunk-3	list_of_offers	get_all_offer_urls	url_doip	head
-unnamed-chunk-4	html_text_na	txt	try	html_text	x	...	inherits	length	return
-unnamed-chunk-5	get_offer_title	html	%>%	html_nodes	html_text_na	get_offer_ref	get_requirements	toString	get_hours	get_tasks	get_activity	get_location	get_salary	get_offer_type	get_offer_period	start	str_trim	end	paste
-unnamed-chunk-6	get_all_info	url	read_html	html	list	get_offer_title	get_offer_ref	get_requirements	get_hours	get_tasks	get_activity	get_location	get_salary	get_offer_type	get_offer_period	toString
-unnamed-chunk-7	all_info	list_of_offers	%>%	map	get_all_info	data	do.call	rbind.data.frame	lapply	as.character	write.table	head
-unnamed-chunk-8	offers_madm	data	%>%	select	everything	filter	str_detect	tolower	requirements	write.table
