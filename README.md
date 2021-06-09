@@ -1,4 +1,3 @@
-# Data Science Portfolio by [Hendrik Mischo](https://github.com/hencho108)
 This repository is a compilation of some of the projects I worked on. Usually the objective of these projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. Click headlines to see the analysis and code.
 
 ## [Crypto Tracker Website (work in progress)](https://github.com/hencho108/crypto-tracker-website)
@@ -19,7 +18,7 @@ In this project my colleage Kelly Raas and I trained and deployed a machine lear
 View a live demo of the app [here](https://movie-review-ai.herokuapp.com/).
 
 <p align="center">
-<img src="https://github.com/hencho108/hencho108.github.io/blob/main/img/movie-demo.gif" width="327" height="633">
+<img src="img/movie-demo.gif" width="327" height="633">
 </p>
 
 We built the application following these steps:
