@@ -8,7 +8,7 @@ A website that allows users to track the performance of their crypto currency po
 
 Key Features:
 - Main page
-- Sign up and login pages with SQLLite database interaction
+- Sign up and login pages with SQLlite database interaction
 - Ability to import CSV containing trades for each user
 - Coinmarketcap API integration to get real time and historic prices
 - Automatic calculation of current portfolio performance
