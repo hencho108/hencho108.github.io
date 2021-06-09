@@ -1,4 +1,3 @@
-### [hencho108.github.io](https://hencho108.github.io)
 # Data Science Portfolio by [Hendrik Mischo](https://github.com/hencho108)
 This repository is a compilation of some of the projects I worked on. Usually the objective of these projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. Click headlines to see the analysis and code.
 
