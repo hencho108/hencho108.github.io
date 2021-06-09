@@ -1,6 +1,6 @@
 This repository is a compilation of some of the projects I worked on. Usually the objective of these projects is to derive interesting insights from data and build useful models using data science and machine learning techniques. Click headlines to see the analysis and code.
 
-## [Crypto Tracker Website (work in progress)](https://github.com/hencho108/crypto-tracker-website)
+### [Crypto Tracker Website (work in progress)](https://github.com/hencho108/crypto-tracker-website)
 
 A website that allows users to track the performance of their crypto currency portfolio in real time simply by importing their trades.
 
