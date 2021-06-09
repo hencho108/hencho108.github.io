@@ -3,10 +3,10 @@
 
 @import "{{ site.theme }}";
 
-header {
-  display: none;
-}
+#header_wrap .inner {
+    padding: 40px 10px 20px 10px;
+  }
 
 h2 {
-    font-size: 24px;
+    font-size: 26px;
   }
